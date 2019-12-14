@@ -4,7 +4,33 @@ require(`dotenv`).config({
 
 module.exports = {
   siteMetadata: {
-    siteTitleAlt: `Minimal Blog - Gatsby Theme`,
+
+    siteTitle: `Barak`,
+
+    siteTitleAlt: `Barak`,
+
+    siteHeadline: `Barak's Blog`,
+
+    siteUrl: `https://barac.dev`,
+
+    siteDescription: `Barak John's portfolio as a fullstack developer equiped with a blog to share simple thoughts`,
+
+    siteLanguage: `en`,
+
+    siteImage: `/banner.jpg`,
+    // Twitter Handle
+    author: `@barak_codes`,
+
+    externalLinks: [
+      {
+        name: `Twitter`,
+        url: `https://twitter.com/barak_codes`
+      },
+      {
+        name: `Instagram`,
+        url: `https://www.instagram.com/barak_breezy/`
+      }
+    ],
     navigation: [
       {
         title: `Blog`,
