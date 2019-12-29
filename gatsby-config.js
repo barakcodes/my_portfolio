@@ -17,7 +17,7 @@ module.exports = {
 
     siteLanguage: `en`,
 
-    siteImage: `/banner.jpg`,
+    siteImage: `/banner.jpeg`,
     // Twitter Handle
     author: `@barak_codes`,
 
@@ -57,9 +57,9 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `minimal-blog - @lekoarts/gatsby-theme-minimal-blog`,
-        short_name: `minimal-blog`,
-        description: `Typography driven, feature-rich blogging theme with minimal aesthetics. Includes tags/categories support and extensive features for code blocks such as live preview, line numbers, and code highlighting.`,
+        name: `Barak John`,
+        short_name: `Barak`,
+        description: `Fullstack developer portfolio and blog, Barak John blogs and shows off the work he does with Lockwood Technolgy`,
         start_url: `/`,
         background_color: `#fff`,
         theme_color: `#6B46C1`,
