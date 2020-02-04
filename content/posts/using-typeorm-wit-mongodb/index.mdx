@@ -1,0 +1,124 @@
+---
+title: So I tried out typeorm with MongoDB
+date: 2020-02-02
+description: A simple but robust approach of the project structure I'm looking forward to work with
+tags:
+  - Node.JS
+  - Tutorial
+  - API
+  - Express
+  - MongoDB
+---
+
+Hey!, If you have been doing js or even typescript for backend you might have definately heard of [Typeorm]() is what they call and Object Relation Mapper(ORM) in short
+It's does what mongoose does just with a wide range of relational and non relational databases. It's an amazing tool especially if you're dealing with relational databases
+like Postgress🐘.  
+ It has a bunch of features and helpers all around that make it a compelling choice not to forget it has great [typescript]() support. However the compelling thing
+for me was the repositories out of the box and the typescript support which is just amazing. So I ventured out to see how well it works with mongoDB my favourite overall
+database when working with Node.
+
+### Setting Thing Up
+
+To set everything up you need a few basic thing set up:
+
+1.  A node js project,I used Express with typescript. You're free to choose any.
+2.  MongoDB instance either running locally or anywhere else
+
+#### 1. Adding typeorm to your project
+
+First things first we'll install the package using `yarn` you can use npm if that's you favourite. To install yarn and all it needs run the followig command:
+
+     yarn add typeorm reflect-metadata mongodb
+
+Here we need `mongodb` as the driver that typeorm uses to communicate with the database, `reflect-metadata` makes sure that it's well okay for us to use the typeorm decorators
+and I don't know if you saw this coming but we need `typeorm` too because we're working with well typeorm.
+
+#### 2. setting up a database connection
+
+After all the packages are intalled next we move to setting up a connection with our database. Typeorm has this special file called `ormconfig.json` that you create for
+holding all the information that typeorm uses including the database connection parameters. You can also ignore these and just go ahead and pass the connection parameters
+straight to the function that will work too.  
+ We'll create a file in our project for connecting with the database I named mine`createDBConnection.ts` you can name yours whatever you want.
+In the file we'll just add the following code.
+
+```ts
+import { createConnection, Connection } from "typeorm";
+export const startDatabaseConnection = async (): Promise<Connection> => {
+  const dbConnection: Connection = await createConnection({
+    type: "mongodb",
+    host: "localhost",
+    port: 27017,
+    database: "mongodb://localhost/test_database"
+  });
+
+  return dbConnection;
+};
+```
+
+We import the function that creates the connection from typeorm the we pass it all our parameters it needs to connect to the database, and we import the connection so
+we can get fancy and add types to our function declaration. Now just import this to your entry file maybe `index.ts` or something then everything should work. An you should
+be connected to your database. So our setting up is done let's get our hands dirty.
+
+### Basic operations with typeorm
+
+So now that we're set up it's time to start digging around and see what extactly makes typeorm so special:
+
+#### 1. Defining entities using typeorm.
+
+Typeorm is decorator heavy and setting up entities is a little bit different than what we're used to with mongoose. So I'll just define a simple user entity in the file
+`User.entity.ts`
+
+```ts
+import {
+  Entity,
+  ObjectID,
+  ObjectIdColumn,
+  Column,
+  BeforeInsert
+} from "typeorm";
+import { hash } from "bcrypt";
+
+@Entity()
+export class User {
+  @ObjectIdColumn()
+  id: ObjectID;
+
+  @Column()
+  userName: string;
+
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+
+  @BeforeInsert()
+  async hashPasswordBeforeInsert() {
+    this.password = await hash(this.password, 15);
+  }
+}
+```
+
+I know you're looking at me now like what? I'm sorry they're not extactly similar there's just a tiny difference as you can see. Remember when I said something abou decorators,
+we'll here they are. You define an entity by using the `Entity` decorator. Here we use columns for defining the collections variables. Notice the first one though we use
+`@ObjectIdColumn` this is so that typeorm knows to generate the id's which we're all used to in mongoDB.  
+Also you could do a lot of other nifty things before you "insert" which is just "save". As an example here I'm hashing the user's password before resetting it.
+You could do a lot of other stuff with this.It's very powerfull stuff and more intuitive than good ol mongoose.  
+Iorder to use mongoose life syntax like `User.find({})` you'll have to extend the class with something called `Base Entity` like so:
+
+```ts
+import {
+  Entity,
+  ObjectID,
+  ObjectIdColumn,
+  Column,
+  BeforeInsert,
+  BaseEntity
+} from "typeorm";
+export class User extends BaseEntity{
+
+```
+
+So I think we're good so far on the creation of entities so far. For more information just visit the [docs]().
+
+#### Proposed Solution
